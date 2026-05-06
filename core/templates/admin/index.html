@@ -1,0 +1,89 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+    {% if subtitle %}{{ subtitle }} |{% endif %}
+    {{ title }} | {{ site_title|default:_('Django site admin') }}
+{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+
+    <link rel="icon" type="image/svg+xml" href="{% static 'images/ico.svg' %}">
+{% endblock %}
+
+{% block branding %}
+    {% include "unfold/helpers/site_branding.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4 mb-6">
+    <div class="rounded-2xl bg-dark p-5 shadow-sm border">
+        <div class="text-sm text-gray-500">إجمالي الكتب</div>
+        <div class="text-3xl font-bold mt-2">{{ total_documents|default:0 }}</div>
+    </div>
+
+    <div class="rounded-2xl bg-dark p-5 shadow-sm border">
+        <div class="text-sm text-gray-500">كتب اليوم</div>
+        <div class="text-3xl font-bold mt-2">{{ today_documents|default:0 }}</div>
+    </div>
+
+    <div class="rounded-2xl bg-dark p-5 shadow-sm border">
+        <div class="text-sm text-gray-500">الداخلي</div>
+        <div class="text-3xl font-bold mt-2">{{ internal_documents|default:0 }}</div>
+    </div>
+
+    <div class="rounded-2xl bg-dark p-5 shadow-sm border">
+        <div class="text-sm text-gray-500">الخارجي</div>
+        <div class="text-3xl font-bold mt-2">{{ external_documents|default:0 }}</div>
+    </div>
+</div>
+
+<div class="grid gap-4 md:grid-dark-3 mb-6">
+    <div class="rounded-2xl bg-dark p-5 shadow-sm border">
+        <div class="text-sm text-gray-500">الأقسام</div>
+        <div class="text-2xl font-semibold mt-2">{{ departments_count|default:0 }}</div>
+    </div>
+
+    <div class="rounded-2xl bg-dark p-5 shadow-sm border">
+        <div class="text-sm text-gray-500">الجهات الخارجية</div>
+        <div class="text-2xl font-semibold mt-2">{{ external_parties_count|default:0 }}</div>
+    </div>
+
+    <div class="rounded-2xl bg-dark p-5 shadow-sm border">
+        <div class="text-sm text-gray-500">الكلمات المفتاحية</div>
+        <div class="text-2xl font-semibold mt-2">{{ keywords_count|default:0 }}</div>
+    </div>
+</div>
+
+<div class="rounded-2xl bg-dark p-5 shadow-sm border">
+    <h2 class="text-lg font-semibold mb-4">آخر الكتب</h2>
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="text-right border-b">
+                    <th class="py-2">رقم الكتاب</th>
+                    <th class="py-2">الموضوع</th>
+                    <th class="py-2">النوع</th>
+                    <th class="py-2">التاريخ</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for doc in latest_documents %}
+                <tr class="border-b">
+                    <td class="py-2">{{ doc.document_number }}</td>
+                    <td class="py-2">{{ doc.subject }}</td>
+                    <td class="py-2">{{ doc.get_document_kind_display }}</td>
+                    <td class="py-2">{{ doc.document_date }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td class="py-3" colspan="4">لا توجد بيانات بعد</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
